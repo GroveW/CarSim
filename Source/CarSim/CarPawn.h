@@ -7,6 +7,7 @@
 #include "CarPawn.generated.h"
 
 class UFloatingPawnMovement;
+class UBoxComponent;
 
 UCLASS()
 class CARSIM_API ACarPawn : public APawn
@@ -24,10 +25,29 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UFloatingPawnMovement* FloatingPawnMovement;
 
-	float MaxSped = 1400.0f;
+	float MaxSpeed = 1000.0f;
 
+	UPROPERTY(EditDefaultsOnly)
+	float BreakingDistance = 2000.0f;
+	UPROPERTY(EditDefaultsOnly)
+	float MinimalSafeDistance = 1000.0f;
+
+	UPROPERTY(VisibleAnywhere)
 	float DesiredSpeed = 0.0f;
+
+	UPROPERTY(VisibleAnywhere)
 	float CurrentSpeed = 0.0f;
+
+	float PreviousDist = 0.0f;
+
+	static int CarCount;
+
+	ACarPawn* ClosestCar = nullptr;
+
+	bool bSafeDistanceReached = false;
+
+	UPROPERTY(EditInstanceOnly)
+	bool bStop = false;
 
 	void DriveForward(float DeltaTime);
 
@@ -41,4 +61,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void SetMaterial(UMaterial* NewMaterial);
+
+	float GetSpeed();
 };

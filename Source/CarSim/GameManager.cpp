@@ -51,15 +51,20 @@ void AGameManager::SpawnCar()
 		FRotator SpawnRotation = FVector::RightVector.Rotation() * -45.0f;
 
 		auto SpawnedCar = GetWorld()->SpawnActor(CarPawn, &SpawnLocation, &SpawnRotation);
-		auto tmpCarPawn = Cast<ACarPawn>(SpawnedCar);
-		tmpCarPawn->SpawnDefaultController();
 
-		float random = FMath::RandRange(0.0f, 29.0f) / 10.0f;
-		int randomMatIndex = static_cast<int>(random);
+		if (SpawnedCar)
+		{
+			ACarPawn* tmpCar = Cast<ACarPawn>(SpawnedCar);
 
-		tmpCarPawn->SetMaterial(CarsMaterials[randomMatIndex]);
+			tmpCar->SpawnDefaultController();
 
-		bSpawnFree = false;
+			float random = FMath::RandRange(0.0f, 29.0f) / 10.0f;
+			int randomMatIndex = static_cast<int>(random);
+
+			tmpCar->SetMaterial(CarsMaterials[randomMatIndex]);
+
+			bSpawnFree = false;
+		}
 	}
 }
 
@@ -71,14 +76,12 @@ void AGameManager::OnSpawnEndOverlap(class UPrimitiveComponent* OverlappedComp, 
 	}
 
 	FTimerHandle EmptyHandle;
-	//GetWorldTimerManager().SetTimer(EmptyHandle, this, &AGameManager::SpawnCar, FMath::RandRange(MinCarSpawnRate, MaxCarSpawnRate), false);
+	GetWorldTimerManager().SetTimer(EmptyHandle, this, &AGameManager::SpawnCar, FMath::RandRange(MinCarSpawnRate, MaxCarSpawnRate), false);
 }
 
 void AGameManager::OnDestroyBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hitresult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("begin"));
-
 	if (OtherActor->ActorHasTag("CarPawn"))
 	{
 		OtherActor->Destroy();

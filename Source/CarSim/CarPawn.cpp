@@ -59,6 +59,8 @@ void ACarPawn::WatchIfCarAhead()
 {
 	if (!ClosestCar)
 	{
+		CurrentSpeed = DesiredSpeed;
+
 		FVector StartPos = GetActorLocation();
 		FHitResult HitResult;
 
@@ -71,13 +73,20 @@ void ACarPawn::WatchIfCarAhead()
 			}
 		}
 	}
+	else if (ClosestCar && ClosestCar->IsActorBeingDestroyed())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DESTROYED"));
+
+		ClosestCar = nullptr;
+		CurrentSpeed = DesiredSpeed;
+	}
 	else
 	{
 		CurrentSpeed = ClosestCar->GetSpeed();
 
 		float CurrentDist = FVector::Distance(ClosestCar->GetActorLocation(), GetActorLocation());
 
-		if (CurrentDist > BreakingDistance)
+		if (CurrentSpeed > DesiredSpeed || CurrentDist > BreakingDistance)
 		{
 			ClosestCar = nullptr;
 			CurrentSpeed = DesiredSpeed;

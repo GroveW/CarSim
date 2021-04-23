@@ -28,9 +28,7 @@ protected:
 	float MaxSpeed = 1000.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float BreakingDistance = 2000.0f;
-	UPROPERTY(EditDefaultsOnly)
-	float MinimalSafeDistance = 1000.0f;
+	float BreakingDistance = 1000.0f;
 
 	UPROPERTY(VisibleAnywhere)
 	float DesiredSpeed = 0.0f;
@@ -38,13 +36,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	float CurrentSpeed = 0.0f;
 
-	float PreviousDist = 0.0f;
-
 	static int CarCount;
 
 	ACarPawn* ClosestCar = nullptr;
-
-	bool bSafeDistanceReached = false;
 
 	UPROPERTY(EditInstanceOnly)
 	bool bStop = false;
